@@ -411,6 +411,11 @@ function startPlayer(resumeEp = null, resumeTime = 0) {
   }
   els.rangeSection.classList.add("hidden");
   els.playerSection.classList.remove("hidden");
+  // the resumed episode must be current *before* the queue is built, or it
+  // stays queued and replays when it ends (or needs a double "next" to skip);
+  // on a podcast switch the old show's episode must not leak into this one
+  if (resumeEp) state.current = resumeEp;
+  else if (!samePodcast) state.current = null;
   buildQueue();
   syncPlayerOrderButtons();
   refreshPlayerChips();
