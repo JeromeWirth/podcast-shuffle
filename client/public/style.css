@@ -209,6 +209,18 @@ audio { width: 100%; margin: 8px 0 14px; }
 
 #queue-status { margin-top: 12px; }
 
+.footer { text-align: center; margin-top: 24px; font-size: 0.8rem; color: var(--muted); }
+.footer a { color: var(--muted); text-decoration: none; }
+.footer a:hover { color: var(--text); text-decoration: underline; }
+
+.home-link { color: inherit; text-decoration: none; }
+.legal h2 { font-size: 1.3rem; margin-bottom: 8px; }
+.legal h3 { font-size: 1rem; margin-top: 20px; margin-bottom: 6px; }
+.legal p { line-height: 1.6; color: var(--text); font-size: 0.92rem; }
+.legal p + p { margin-top: 10px; }
+.legal .legal-footer { margin-top: 24px; }
+.legal a { color: var(--accent-hover); }
+
 .history { margin-top: 16px; }
 .history summary { cursor: pointer; color: var(--muted); font-size: 0.9rem; }
 .history ul { list-style: none; margin-top: 8px; }
