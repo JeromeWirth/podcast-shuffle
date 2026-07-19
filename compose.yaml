@@ -1,0 +1,9 @@
+services:
+  podcast-shuffle:
+    build: .
+    restart: unless-stopped
+    # bound to localhost only — the reverse proxy (nginx/Caddy) is the public face
+    ports:
+      - "127.0.0.1:3000:3000"
+    environment:
+      TRUST_PROXY: "1"

@@ -251,9 +251,14 @@ function normalizeDuration(raw) {
   return parts.reduce((acc, p) => acc * 60 + p, 0);
 }
 
-app.listen(PORT, () => {
-  console.log(`podcast-shuffle running at http://localhost:${PORT}`);
-  if (ALLOW_PRIVATE_FEEDS) {
-    console.warn("WARNING: ALLOW_PRIVATE_FEEDS is set — SSRF protection is OFF (dev only)");
-  }
-});
+// On Vercel the app runs as a serverless function (api/index.js) — no listener
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`podcast-shuffle running at http://localhost:${PORT}`);
+    if (ALLOW_PRIVATE_FEEDS) {
+      console.warn("WARNING: ALLOW_PRIVATE_FEEDS is set — SSRF protection is OFF (dev only)");
+    }
+  });
+}
+
+export default app;
