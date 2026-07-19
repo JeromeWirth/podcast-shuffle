@@ -1,0 +1,6 @@
+{
+  "name": "@podcast-shuffle/client",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Frontend. Currently plain static files in public/ (no build step). A future framework app (React/Angular/Vite) lives here with its own deps; build output should go to dist/ and the server's static path updated accordingly."
+}

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Podcast Shuffle</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <h1>🔀 Podcast Shuffle</h1>
+      <p class="tagline">Endless random radio from any podcast's back catalog</p>
+    </header>
+
+    <!-- Step 1: find a podcast -->
+    <section id="search-section" class="card">
+      <label for="search-input" class="section-label">Podcast name or RSS feed URL</label>
+      <div class="search-row">
+        <input id="search-input" type="text" placeholder="e.g. 99% Invisible — or paste a feed URL" autocomplete="off" />
+        <button id="search-btn" class="btn primary">Search</button>
+      </div>
+      <div id="search-status" class="status"></div>
+      <ul id="search-results" class="results"></ul>
+
+      <div id="resume-section" class="resume hidden">
+        <h3 class="resume-title">Continue listening</h3>
+        <div id="resume-grid" class="resume-grid"></div>
+      </div>
+    </section>
+
+    <!-- Step 2: pick a date range -->
+    <section id="range-section" class="card hidden">
+      <div class="podcast-header">
+        <img id="podcast-art" alt="" />
+        <div>
+          <h2 id="podcast-title"></h2>
+          <p id="podcast-meta" class="muted"></p>
+        </div>
+        <div class="header-btns">
+          <button id="close-range" class="btn ghost">✕</button>
+        </div>
+      </div>
+
+      <div class="range-controls">
+        <div class="range-field">
+          <label for="date-from">From</label>
+          <input id="date-from" type="date" />
+        </div>
+        <div class="range-field">
+          <label for="date-to">To</label>
+          <input id="date-to" type="date" />
+        </div>
+        <div id="year-chips" class="year-chips"></div>
+      </div>
+
+      <div class="order-row">
+        <span class="order-label">Play order</span>
+        <div class="order-toggle">
+          <button id="order-shuffle" type="button" class="active">🔀 Shuffle</button>
+          <button id="order-chrono" type="button">📅 In order</button>
+        </div>
+      </div>
+
+      <div class="range-footer">
+        <span id="range-count" class="muted"></span>
+        <button id="start-btn" class="btn primary big">▶ Start shuffle</button>
+      </div>
+    </section>
+
+    <!-- Step 3: the player -->
+    <section id="player-section" class="card hidden">
+      <div class="now-playing">
+        <img id="ep-art" alt="" />
+        <div class="now-playing-text">
+          <span class="on-air">ON AIR</span>
+          <h2 id="ep-title"></h2>
+          <p id="ep-meta" class="muted"></p>
+        </div>
+      </div>
+
+      <audio id="audio" controls preload="auto"></audio>
+
+      <div class="player-controls">
+        <button id="skip-btn" class="btn">⏭ Next episode</button>
+        <button id="random-btn" class="btn">🎲 Play random</button>
+      </div>
+
+      <div class="player-tuning">
+        <div class="order-toggle">
+          <button id="player-order-shuffle" type="button">🔀 Shuffle</button>
+          <button id="player-order-chrono" type="button">📅 In order</button>
+        </div>
+        <div id="player-year-chips" class="year-chips"></div>
+      </div>
+
+      <p id="queue-status" class="muted small"></p>
+
+      <details class="history">
+        <summary>Recently played</summary>
+        <ul id="history-list"></ul>
+      </details>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+{
+  "name": "@podcast-shuffle/server",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "rss-parser": "^3.13.0"
+  }
+}

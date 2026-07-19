@@ -1,0 +1,14 @@
+{
+  "name": "podcast-shuffle",
+  "version": "0.1.0",
+  "description": "Endless shuffle radio for podcast back catalogs, filtered by release date range",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "client",
+    "server"
+  ],
+  "scripts": {
+    "start": "npm start --workspace server"
+  }
+}
