@@ -9,6 +9,9 @@
   },
   "dependencies": {
     "express": "^4.21.2",
-    "rss-parser": "^3.13.0"
+    "express-rate-limit": "^8.6.0",
+    "ipaddr.js": "^1.9.1",
+    "rss-parser": "^3.13.0",
+    "undici": "^8.7.0"
   }
 }

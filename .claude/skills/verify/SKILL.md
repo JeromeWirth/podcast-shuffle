@@ -8,6 +8,9 @@ description: How to run and drive podcast-shuffle for end-to-end verification
 ## Launch
 
 - `npm start` at the repo root (background) → app at http://localhost:3000. No build step.
+- **Fixture feeds require `ALLOW_PRIVATE_FEEDS=1`** in the server's env — the
+  SSRF protection (added 2026-07-19) otherwise blocks localhost/private URLs
+  with "This feed URL is not allowed". Never set this flag in production.
 - Frontend is vanilla JS in `client/public/` — served statically, just reload the browser after edits.
 - Layout is an npm workspace: `server/` (express app) and `client/` (frontend).
 
