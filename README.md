@@ -102,8 +102,12 @@ build output for production.
 
 ## Status
 
-Working local app, shared as-is. Two things are deliberately still open because
-they only matter once the server is *hosted* publicly: an SSRF guard on
-`/api/feed` (refuse private/link-local targets, cap response size) and rate
-limiting plus a short-lived feed cache. For running it locally, none of that
-applies.
+Hardened for public hosting: `/api/feed` has an SSRF guard (rejects
+private/link-local targets, re-validates every redirect hop), a 10 MB
+response cap, and rate limiting (30 req/min/IP on `/api/*`). Deployable to
+Vercel or a Docker host behind a reverse proxy (see `vercel.json` /
+`Dockerfile`).
+
+Still open: a short-lived feed cache, so repeat requests for a popular show
+don't refetch the upstream RSS every time. Not a security gap — just wasted
+bandwidth/compute — but worth adding before real traffic.
