@@ -179,6 +179,12 @@ async function doSearch() {
 
 // ---------- continue-listening grid ----------
 
+// search results act like a dropdown: cleared once a podcast is picked so
+// the range/player is visible right away; the resume grid stays as-is
+function closeSearchResults() {
+  els.searchResults.innerHTML = "";
+}
+
 function renderResumeGrid() {
   const sessions = Object.values(loadSessions())
     .sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0))
@@ -253,6 +259,7 @@ async function loadFeed(feedUrl, restore = null) {
 
     state.sel = { feedUrl, podcast: data, restore };
     setStatus(els.searchStatus, "");
+    closeSearchResults();
     showRangeSection(restore);
   } catch (err) {
     setStatus(els.searchStatus, err.message, true);
