@@ -195,8 +195,10 @@ input[type="date"] { color-scheme: dark; }
 
 audio { width: 100%; margin: 8px 0 14px; }
 
-.player-controls { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.player-controls { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.player-controls .btn { padding: 8px 10px; font-size: 0.85rem; }
 .player-controls .order-toggle { margin-left: auto; }
+.player-controls .order-toggle button { padding: 6px 10px; font-size: 0.8rem; }
 
 .player-tuning {
   display: flex;

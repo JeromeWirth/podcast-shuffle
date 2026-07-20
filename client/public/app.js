@@ -26,6 +26,7 @@ const els = {
   epTitle: $("ep-title"),
   epMeta: $("ep-meta"),
   audio: $("audio"),
+  latestBtn: $("latest-btn"),
   skipBtn: $("skip-btn"),
   randomBtn: $("random-btn"),
   playerOrderShuffle: $("player-order-shuffle"),
@@ -503,6 +504,21 @@ function playRandom() {
   playEpisode(ep);
 }
 
+// jump straight to the newest episode of the whole show, ignoring the
+// selected date range; the range's queue is left untouched, so "Next
+// episode" / "Play random" pick up the selected year range again right after
+function playLatest() {
+  if (state.current) {
+    state.played.add(state.current.guid);
+    addHistory(state.current);
+  }
+  const eps = state.podcast.episodes;
+  if (!eps.length) return;
+  const ep = eps[eps.length - 1]; // episodes are sorted oldest → newest
+  state.queue = state.queue.filter((q) => q.guid !== ep.guid);
+  playEpisode(ep);
+}
+
 function playEpisode(ep, startTime = 0) {
   state.current = ep;
   els.epTitle.textContent = ep.title;
@@ -578,6 +594,7 @@ els.orderChrono.addEventListener("click", () => setSelOrder("chrono"));
 
 els.startBtn.addEventListener("click", () => startPlayer());
 
+els.latestBtn.addEventListener("click", playLatest);
 els.skipBtn.addEventListener("click", playNext);
 els.randomBtn.addEventListener("click", playRandom);
 
