@@ -19,9 +19,10 @@
       <h3>Das Wichtigste in Kürze</h3>
       <p>
         Podcast Shuffle ist ein privates, nicht-kommerzielles Hobbyprojekt.
-        Es gibt <strong>keine Benutzerkonten, keine Cookies, kein Tracking und
-        keine Analyse-Dienste</strong>. Der Wiedergabestand wird ausschließlich
-        in Ihrem eigenen Browser gespeichert und nie an uns übertragen.
+        Es gibt <strong>keine Benutzerkonten und keine Cookies</strong>. Zur
+        anonymen Reichweitenmessung wird Vercel Web Analytics eingesetzt (siehe
+        unten). Der Wiedergabestand wird ausschließlich in Ihrem eigenen
+        Browser gespeichert und nie an uns übertragen.
       </p>
 
       <h3>Verantwortlicher</h3>
@@ -43,6 +44,23 @@
         berechtigtes Interesse an einem stabilen, missbrauchsfreien Betrieb)
         und werden nach kurzer Zeit automatisch gelöscht. Eine Zusammenführung
         mit anderen Daten findet nicht statt.
+      </p>
+
+      <h3>Reichweitenmessung (Vercel Web Analytics)</h3>
+      <p>
+        Zur anonymen Analyse der Seitenaufrufe nutze ich Vercel Web Analytics,
+        einen Dienst der Vercel Inc. (USA). Der Dienst verwendet keine Cookies
+        und keine eindeutigen Kennungen zur Wiedererkennung einzelner
+        Besucher; erfasst werden lediglich aggregierte Kennzahlen wie
+        Seitenaufrufe, grober Standort (Land/Region) und Referrer. Eine
+        Zuordnung zu einzelnen Personen findet nicht statt. Rechtsgrundlage
+        ist mein berechtigtes Interesse an der Reichweitenmessung (Art. 6
+        Abs. 1 lit. f DSGVO); wegen des cookielosen, nicht auf Wiedererkennung
+        angelegten Charakters der Verarbeitung ist nach § 25 TDDDG keine
+        Einwilligung erforderlich. Da Vercel Inc. in den USA sitzt, kann es im
+        Rahmen der Verarbeitung zu einer Datenübermittlung in die USA kommen;
+        nähere Informationen dazu stellt Vercel in der eigenen
+        Datenschutzerklärung bereit.
       </p>
 
       <h3>Speicherung in Ihrem Browser (localStorage)</h3>
@@ -91,8 +109,9 @@
         Verarbeitung (Art. 18), Datenübertragbarkeit (Art. 20) und Widerspruch
         (Art. 21) sowie das Recht, sich bei einer Datenschutz-Aufsichtsbehörde
         zu beschweren (Art. 77). Da diese Seite außer den kurzlebigen
-        Server-Logdateien keine personenbezogenen Daten speichert, gibt es in
-        aller Regel allerdings nichts, worüber Auskunft zu erteilen wäre.
+        Server-Logdateien und den anonymisierten Analytics-Kennzahlen keine
+        personenbezogenen Daten speichert, gibt es in aller Regel allerdings
+        nichts, worüber Auskunft zu erteilen wäre.
         Für Anfragen genügt eine E-Mail an die oben genannte Adresse.
       </p>
 
@@ -104,5 +123,6 @@
       </p>
     </section>
   </main>
+  <script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>
