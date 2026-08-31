@@ -29,17 +29,21 @@ const els = {
   latestBtn: $("latest-btn"),
   skipBtn: $("skip-btn"),
   randomBtn: $("random-btn"),
+  bookmarkBtn: $("bookmark-btn"),
   playerOrderShuffle: $("player-order-shuffle"),
   playerOrderChrono: $("player-order-chrono"),
   playerYearChips: $("player-year-chips"),
   queueStatus: $("queue-status"),
   historyList: $("history-list"),
+  bookmarksSection: $("bookmarks-section"),
+  bookmarksList: $("bookmarks-list"),
 };
 
 const SESSIONS_KEY = "podcast-shuffle-sessions"; // { [feedUrl]: session }
 const MAX_SESSIONS = 6; // keep storage bounded — only the most recently played shows
 const ACTIVE_KEY = "podcast-shuffle-active"; // feedUrl of the last-played podcast
 const LEGACY_KEY = "podcast-shuffle-session"; // pre-multi-session single blob
+const BOOKMARKS_KEY = "podcast-shuffle-bookmarks"; // [ { id, feedUrl, epGuid, time, ... } ], not capped — deliberate saves
 
 const state = {
   // podcast shown in the search/range sections (may differ from what's playing)
@@ -129,6 +133,123 @@ function deleteSession(feedUrl) {
 setInterval(() => {
   if (state.current && !els.audio.paused) saveSession();
 }, 10000);
+
+// ---------- bookmarks ----------
+
+function loadBookmarks() {
+  try {
+    return JSON.parse(localStorage.getItem(BOOKMARKS_KEY)) || [];
+  } catch {
+    return [];
+  }
+}
+
+function saveBookmarks(list) {
+  try {
+    localStorage.setItem(BOOKMARKS_KEY, JSON.stringify(list));
+  } catch {}
+}
+
+function addBookmark() {
+  if (!state.current) return;
+  const time = els.audio.currentTime || 0;
+  const note = prompt("Add a note for this bookmark (optional):", "");
+  if (note === null) return; // cancelled — don't save
+
+  const bookmarks = loadBookmarks();
+  bookmarks.unshift({
+    id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+    feedUrl: state.feedUrl,
+    podcastTitle: state.podcast.title,
+    epGuid: state.current.guid,
+    epTitle: state.current.title,
+    time,
+    note: note.trim().slice(0, 200),
+    createdAt: Date.now(),
+  });
+  saveBookmarks(bookmarks);
+  renderBookmarksList();
+
+  const original = els.bookmarkBtn.textContent;
+  els.bookmarkBtn.textContent = `✓ Saved ${formatTime(time)}`;
+  setTimeout(() => (els.bookmarkBtn.textContent = original), 1500);
+}
+
+function removeBookmark(id) {
+  saveBookmarks(loadBookmarks().filter((b) => b.id !== id));
+  renderBookmarksList();
+}
+
+function editBookmarkNote(id) {
+  const bookmarks = loadBookmarks();
+  const bm = bookmarks.find((b) => b.id === id);
+  if (!bm) return;
+  const note = prompt("Note for this bookmark:", bm.note || "");
+  if (note === null) return; // cancelled
+  bm.note = note.trim().slice(0, 200);
+  saveBookmarks(bookmarks);
+  renderBookmarksList();
+}
+
+function renderBookmarksList() {
+  const bookmarks = loadBookmarks();
+  els.bookmarksSection.classList.toggle("hidden", !bookmarks.length);
+  els.bookmarksList.innerHTML = "";
+  for (const bm of bookmarks) {
+    const li = document.createElement("li");
+
+    const info = document.createElement("div");
+    info.className = "bm-info";
+    info.textContent = `${bm.epTitle} · ${formatTime(bm.time)}`;
+    if (bm.feedUrl !== state.feedUrl) {
+      const sub = document.createElement("div");
+      sub.className = "bm-sub muted";
+      sub.textContent = bm.podcastTitle;
+      info.appendChild(sub);
+    }
+    if (bm.note) {
+      const note = document.createElement("div");
+      note.className = "bm-note muted";
+      note.textContent = bm.note;
+      info.appendChild(note);
+    }
+    info.addEventListener("click", () => jumpToBookmark(bm));
+
+    const edit = document.createElement("button");
+    edit.className = "bm-edit";
+    edit.title = bm.note ? "Edit note" : "Add note";
+    edit.textContent = "✎";
+    edit.addEventListener("click", () => editBookmarkNote(bm.id));
+
+    const del = document.createElement("button");
+    del.className = "bm-del";
+    del.title = "Remove bookmark";
+    del.textContent = "✕";
+    del.addEventListener("click", () => removeBookmark(bm.id));
+
+    li.append(info, edit, del);
+    els.bookmarksList.appendChild(li);
+  }
+}
+
+// jump to a bookmarked timestamp, switching podcasts first if needed
+async function jumpToBookmark(bm) {
+  if (state.feedUrl === bm.feedUrl && state.podcast) {
+    const ep = state.podcast.episodes.find((e) => e.guid === bm.epGuid);
+    if (ep) return jumpToEpisode(ep, bm.time);
+  }
+  await loadFeed(bm.feedUrl);
+  if (!state.sel || state.sel.feedUrl !== bm.feedUrl) return;
+  const eps = state.sel.podcast.episodes;
+  const ep = eps.find((e) => e.guid === bm.epGuid);
+  if (!ep) {
+    setStatus(els.searchStatus, "That episode is no longer in the feed.", true);
+    return;
+  }
+  els.dateFrom.value = isoDay(eps[0].date);
+  els.dateTo.value = isoDay(eps[eps.length - 1].date);
+  startPlayer(ep, bm.time);
+}
 
 // ---------- search ----------
 
@@ -519,6 +640,17 @@ function playLatest() {
   playEpisode(ep);
 }
 
+// jump straight to a specific episode/time (e.g. from a bookmark), regardless
+// of queue or play order
+function jumpToEpisode(ep, time) {
+  if (state.current) {
+    state.played.add(state.current.guid);
+    addHistory(state.current);
+  }
+  state.queue = state.queue.filter((q) => q.guid !== ep.guid);
+  playEpisode(ep, time);
+}
+
 function playEpisode(ep, startTime = 0) {
   state.current = ep;
   els.epTitle.textContent = ep.title;
@@ -543,6 +675,7 @@ function playEpisode(ep, startTime = 0) {
   updateMediaSession(ep);
   saveSession();
   renderResumeGrid(); // progress numbers in the grid stay current
+  renderBookmarksList(); // "other podcast" subtitles depend on which show is active
 }
 
 function updateQueueStatus() {
@@ -567,6 +700,17 @@ function formatDuration(sec) {
   const h = Math.floor(sec / 3600);
   const m = Math.round((sec % 3600) / 60);
   return h ? `${h} h ${m} min` : `${m} min`;
+}
+
+// mm:ss / h:mm:ss, for exact bookmark timestamps
+function formatTime(sec) {
+  sec = Math.floor(sec || 0);
+  const h = Math.floor(sec / 3600);
+  const m = Math.floor((sec % 3600) / 60);
+  const s = sec % 60;
+  const mm = h ? String(m).padStart(2, "0") : m;
+  const ss = String(s).padStart(2, "0");
+  return h ? `${h}:${mm}:${ss}` : `${mm}:${ss}`;
 }
 
 function updateMediaSession(ep) {
@@ -597,6 +741,7 @@ els.startBtn.addEventListener("click", () => startPlayer());
 els.latestBtn.addEventListener("click", playLatest);
 els.skipBtn.addEventListener("click", playNext);
 els.randomBtn.addEventListener("click", playRandom);
+els.bookmarkBtn.addEventListener("click", addBookmark);
 
 els.playerOrderShuffle.addEventListener("click", () => setPlayerOrder("shuffle"));
 els.playerOrderChrono.addEventListener("click", () => setPlayerOrder("chrono"));
@@ -631,6 +776,7 @@ function migrateLegacySession() {
 (async function boot() {
   migrateLegacySession();
   renderResumeGrid();
+  renderBookmarksList();
   const active = localStorage.getItem(ACTIVE_KEY);
   const saved = active ? loadSessions()[active] : null;
   if (!saved) return;

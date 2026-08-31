@@ -86,6 +86,7 @@
         <button id="latest-btn" class="btn">🆕 Play latest</button>
         <button id="skip-btn" class="btn">⏭ Next episode</button>
         <button id="random-btn" class="btn">🎲 Play random</button>
+        <button id="bookmark-btn" class="btn">🔖 Bookmark</button>
         <div class="order-toggle">
           <button id="player-order-shuffle" type="button">🔀 Shuffle</button>
           <button id="player-order-chrono" type="button">📅 In order</button>
@@ -97,6 +98,11 @@
       </div>
 
       <p id="queue-status" class="muted small"></p>
+
+      <details id="bookmarks-section" class="history bookmarks hidden">
+        <summary>🔖 Bookmarks</summary>
+        <ul id="bookmarks-list"></ul>
+      </details>
 
       <details class="history">
         <summary>Recently played</summary>

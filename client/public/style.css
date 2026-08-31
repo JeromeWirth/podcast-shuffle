@@ -227,3 +227,22 @@ audio { width: 100%; margin: 8px 0 14px; }
 .history summary { cursor: pointer; color: var(--muted); font-size: 0.9rem; }
 .history ul { list-style: none; margin-top: 8px; }
 .history li { padding: 6px 0; font-size: 0.88rem; color: var(--muted); border-top: 1px solid var(--border); }
+
+.bookmarks li { display: flex; align-items: center; gap: 6px; }
+.bm-info { flex: 1; min-width: 0; cursor: pointer; }
+.bm-info:hover { color: var(--text); }
+.bm-sub { font-size: 0.78rem; margin-top: 2px; }
+.bm-note { font-size: 0.78rem; margin-top: 2px; font-style: italic; }
+.bm-edit, .bm-del {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  font-size: 0.65rem;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.bm-edit:hover { color: var(--text); border-color: var(--accent); }
+.bm-del:hover { color: var(--text); border-color: var(--danger); }
