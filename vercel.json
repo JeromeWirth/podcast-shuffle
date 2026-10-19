@@ -1,5 +1,8 @@
 {
   "outputDirectory": "client/public",
   "rewrites": [{ "source": "/api/:path*", "destination": "/api" }],
+  "redirects": [
+    { "source": "/impressum.html", "destination": "https://jeromewirth.de/impressum", "permanent": true }
+  ],
   "functions": { "api/index.js": { "maxDuration": 10 } }
 }
